@@ -397,7 +397,9 @@
                 vicinity: ['default'],
                 icon: ['default'],
                 fields: ['geometry'],
-                beds: [1]
+                beds: [1],
+                distance: ['1'],
+                duration: ['1']
             };
             service = new google.maps.places.PlacesService(map);
             service.nearbySearch(request, callback);
@@ -429,7 +431,7 @@
 
                 marker.addListener('click', function () {
                     infoWindow.setContent("<img class='mr-2 mb-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>"
-                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />" + "<button class='btn btn-outline-dark btn-block' id='getDirection'>Get Directions</button>");
+                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />" + "<p>" + "<button class='btn btn-outline-dark btn-block' id='getDirection'>Get Directions</button>");
                         var src = new google.maps.LatLng(currentLocation);
                     var getDirectionButton = document.getElementById("getDirection");
                     infoWindow.open(map, marker);
@@ -447,6 +449,8 @@
                                 avoidTolls: false,
                             }, callback);
                             function callback(response, status) {
+                                infoWindow.setContent(infoWindow.getContent()+"<br />" + "Distance: " + response.rows[0].elements[0].distance.text
+                                + "<p>" + "Approximate Time: " + response.rows[0].elements[0].duration.text);
                                 console.log(response.rows[0].elements[0].distance.text);
                                 console.log(response.rows[0].elements[0].duration.text);
                                 directionsDisplay.setMap(map);
