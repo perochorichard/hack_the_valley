@@ -76,6 +76,8 @@
                 location: currentLocation,
                 radius: '25000',
                 name: ['homeless shelter'],
+                vicinity: ['default'],
+                icon: ['default'],
                 fields: ['geometry']
             };
             service = new google.maps.places.PlacesService(map);
@@ -92,10 +94,13 @@
         var marker = new google.maps.Marker({
           map: map,
           position: place.geometry.location,
+          icon: "https://media.discordapp.net/attachments/535916156717105172/678145016954093570/unknown.png"
         });
 
         marker.addListener('click', function() {
-            infoWindow.setContent(place.name);
+            var shelterImage = new Image(100, 200);
+            shelterImage.src = place.icon;
+            infoWindow.setContent("<div style='float:left'><img src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'></div>" + "<p>" + place.name + "<br />" + place.vicinity + "</p>");
             //infoWindow.setContent("Full?")
             infoWindow.open(map, marker);
         });
