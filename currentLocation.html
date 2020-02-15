@@ -355,7 +355,7 @@
       });*/
       var request = {
         location: currentLocation,
-        radius: '25000',
+        radius: '10000',
         name: ['homeless shelter'],
         vicinity: ['default'],
         icon: ['default'],
@@ -375,7 +375,7 @@
         var marker = new google.maps.Marker({
           map: map,
           position: place.geometry.location,
-          icon: 'Tiny_boi.png'
+          icon: 'mapMarker.png'
         });
 
         marker.addListener('click', function () {
