@@ -4,13 +4,14 @@
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 90%;
-      }
-      /* Optional: Makes the sample page fill the window. */
+       .map-responsive{
+        overflow:hidden;
+        padding-bottom:50%;
+        position:relative;
+        height:0;
+    }
       html, body {
         height: 100%;
         margin: 0;
@@ -19,13 +20,13 @@
     </style>
   </head>
   <body>
-    <div id="map"></div>
-    <button id="search">Search</button>
+    <div class="container-fluid">
+        <div class="map-responsive" id="map"></div>
+      <div class="caption text-center mt-1 pt-1">
+        <button class="btn btn-primary" id="search">Search</button>
+      </div>
+      </div>
     <script>
-      // Note: This example requires that you consent to location sharing when
-      // prompted by your browser. If you see the error "The Geolocation service
-      // failed.", it means you probably did not give permission for the browser to
-      // locate you.
       var map, infoWindow, services;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -94,13 +95,13 @@
         var marker = new google.maps.Marker({
           map: map,
           position: place.geometry.location,
-          icon: "https://media.discordapp.net/attachments/535916156717105172/678145016954093570/unknown.png"
+          //icon: "https://media.discordapp.net/attachments/535916156717105172/678145016954093570/unknown.png+"
         });
 
         marker.addListener('click', function() {
             var shelterImage = new Image(100, 200);
             shelterImage.src = place.icon;
-            infoWindow.setContent("<div style='float:left'><img src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'></div>" + "<p>" + place.name + "<br />" + place.vicinity + "</p>");
+            infoWindow.setContent("<div id='picture' style='float:left'><img src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'></div>" + "<p>" + place.name + "<br />" + place.vicinity + "</p>");
             //infoWindow.setContent("Full?")
             infoWindow.open(map, marker);
         });
