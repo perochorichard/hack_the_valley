@@ -29,30 +29,32 @@
             margin: 0;
             padding: 0;
         }
-        #myTable{
+
+        #myTable {
             height: 100vh;
             overflow: auto;
         }
-        .myButton{
-            border-radius: 0%!important;
+
+        .myButton {
+            border-radius: 0% !important;
         }
 
-        .myMap{
-            padding: 0!important;
-            margin: 0!important;
-            width: 100%!important;
+        .myMap {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
         }
     </style>
 </head>
 
 <body>
     <div class="container-fluid">
-        <div class="row">    
+        <div class="row">
             <div class="col-3 text-center">
                 <div class="overflow-auto text-center myDiv mt-2 pt-2" id="myTable">
                     <button class="btn btn-outline-secondary btn-lg btn-block myButton" id="search">Search</button>
                 </div>
-                
+
             </div>
             <div class="col-9 myMap">
                 <div class="map-responsive" id="map"></div>
@@ -364,19 +366,19 @@
             }
         }
 
-        function calculateRoute(src, dest){
-        var request = {
-          origin: src,
-          destination: dest,
-          travelMode: 'WALKING'
-        }
+        function calculateRoute(src, dest) {
+            var request = {
+                origin: src,
+                destination: dest,
+                travelMode: 'WALKING'
+            }
 
-        directionsService.route(request, function(result, status){
-          if(status == 'OK'){
-            directionsDisplay.setDirections(result)
-          }
-        })
-      }
+            directionsService.route(request, function (result, status) {
+                if (status == 'OK') {
+                    directionsDisplay.setDirections(result)
+                }
+            })
+        }
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);
             infoWindow.setContent(browserHasGeolocation ?
@@ -431,17 +433,15 @@
 
                 marker.addListener('click', function () {
                     infoWindow.setContent("<img class='mr-2 mb-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>"
-                        + "<p>" + place.name + "<br />" + place.vicinity + 
-                            "</p>" + place.beds + " Beds Available" + "<br />" + "<p>" + 
-                            "<div class = 'text-center'>" +
-                            "<button class='btn btn-outline-dark ' id='getDirectionWalking'>Walking</button>" + 
-                            "<button class='btn btn-outline-dark ml-2' id='getDirectionTransit'>Transit</button>"+
-                            "</div>");
-                        var src = new google.maps.LatLng(currentLocation);
-                    var getDirectionWalking = document.getElementById("getDirectionWalking");
-                    var getDirectionTransit = document.getElementById("getDirectionTransit");
-                    infoWindow.open(map, marker);
-                    getDirectionWalking.addEventListener("click", function(){
+                        + "<p>" + place.name + "<br />" + place.vicinity +
+                        "</p>" + place.beds + " Beds Available" + "<br />" + "<p>" +
+                        
+                        "<button class='btn btn-outline-dark walking btn-block'>Walking</button>" 
+                    
+                        );
+                    var src = new google.maps.LatLng(currentLocation);
+
+                    $('.walking').on('click', function () {
                         service = new google.maps.DistanceMatrixService();
                         var dest = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
                             calculateRoute(src, dest);
@@ -462,36 +462,8 @@
                                 directionsDisplay.setMap(map);
                                 directionsDisplay.setOptions( { suppressMarkers: true } );
                             }
-                    });
-
-                    getDirectionTransit.addEventListener("click", function(){
-                        console.log('do sth');
-                        service = new google.maps.DistanceMatrixService();
-                        var dest = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-                            calculateRoute(src, dest);
-
-                            service.getDistanceMatrix(
-                            {
-                                origins: [src],
-                                destinations: [dest],
-                                travelMode: 'TRANSIT',
-                                transitOptions:{
-                                    modes: ['BUS'], 
-                                    routingPreference: 'FEWER_TRANSFERS'
-                                },
-                                unitSystem: google.maps.UnitSystem.METRIC, 
-                                avoidHighways: false,
-                                avoidTolls: false,
-                            }, callback);
-                            function callback(response, status) {
-                                infoWindow.setContent(infoWindow.getContent()+"<br />" + "Distance: " + response.rows[0].elements[0].distance.text
-                                + "<p>" + "Approximate Time: " + response.rows[0].elements[0].duration.text);
-                                console.log(response.rows[0].elements[0].distance.text);
-                                console.log(response.rows[0].elements[0].duration.text);
-                                directionsDisplay.setMap(map);
-                                directionsDisplay.setOptions( { suppressMarkers: true } );
-                            }
-                    });
+                    })
+                    infoWindow.open(map, marker);
                 });
             }
         }
