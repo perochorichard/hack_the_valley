@@ -8,7 +8,7 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 100%;
+        height: 90%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -20,6 +20,7 @@
   </head>
   <body>
     <div id="map"></div>
+    <button id="search">Search</button>
     <script>
       // Note: This example requires that you consent to location sharing when
       // prompted by your browser. If you see the error "The Geolocation service
@@ -47,7 +48,8 @@
             infoWindow.setContent('You Are Here');
             infoWindow.open(map);
             map.setCenter(pos);
-            searchShelters();
+            var button = document.getElementById('search')
+            button.addEventListener('click', searchShelters);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
             
@@ -65,26 +67,21 @@
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
       }
-    </script>
-    <script>
-        function searchShelters() {
+      var searchShelters =function() {
             /*map = new google.maps.Map(document.getElementById('map'), {
             center: currentLocation,
             zoom: 15
             });*/
-            //infoWindow = new google.maps.InfoWindow;
-
             var request = {
                 location: currentLocation,
-                radius: '5000',
+                radius: '25000',
                 name: ['homeless shelter'],
                 fields: ['geometry']
             };
             service = new google.maps.places.PlacesService(map);
             service.nearbySearch(request, callback);
-
-        }
-        function callback(results, status) {
+            function callback(results, status) {
+            console.log(results)
         if (status == google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
             createMarker(results[i]);
@@ -94,15 +91,17 @@
         function createMarker(place) {
         var marker = new google.maps.Marker({
           map: map,
-          position: place.geometry.location
+          position: place.geometry.location,
         });
 
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
+        marker.addListener('click', function() {
+            infoWindow.setContent(place.name);
+            //infoWindow.setContent("Full?")
+            infoWindow.open(map, marker);
         });
+
       }
-
+        }
 
     </script>
 
