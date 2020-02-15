@@ -17,9 +17,10 @@
     <style>
         .map-responsive {
             overflow: hidden;
-            padding-bottom: 50%;
             position: relative;
             height: 100vh;
+            width: 100%;
+            padding: 0;
         }
 
         html,
@@ -28,22 +29,35 @@
             margin: 0;
             padding: 0;
         }
+        #myTable{
+            height: 100vh;
+            overflow: auto;
+        }
+        .myButton{
+            border-radius: 0%!important;
+        }
+        .myDiv{
+            background-color: #fde1a4;
+        }
+        .myMap{
+            padding: 0!important;
+            margin: 0!important;
+            width: 100%!important;
+        }
     </style>
 </head>
 
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2">
-                <p>list stuff goes here</p>
-                <table id="myTable">
-                    <tbody>
-
-                    </tbody>
-                </table>
-                <button class="btn btn-primary" id="search">Search</button>
+            <div class="col-2 myDiv">
+                
+                <div class="overflow-auto" id="myTable">
+                    <button class="btn btn-primary" id="search">Search</button>
+                </div>
+                
             </div>
-            <div class="col">
+            <div class="col-10 myMap">
                 <div class="map-responsive" id="map"></div>
             </div>
         </div>
@@ -374,13 +388,14 @@
             infoWindow.open(map);
         }
         var searchShelters = function () {
+            this.style.display = "none";
             /*map = new google.maps.Map(document.getElementById('map'), {
             center: currentLocation,
             zoom: 15
             });*/
             var request = {
                 location: currentLocation,
-                radius: '10000',
+                radius: '25000',
                 name: ['homeless shelter'],
                 vicinity: ['default'],
                 icon: ['default'],
@@ -402,7 +417,8 @@
                             console.log(name);
                             map.setCenter(pos);
                         });
-                        $("#myTable").find('tbody').append(listElement);
+                        listElement.addClass("btn btn-outline-secondary btn-block myButton");
+                        $("#myTable").append(listElement);
                         createMarker(results[i]);
                     }
                 }
