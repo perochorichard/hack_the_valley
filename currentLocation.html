@@ -65,13 +65,27 @@
     </script>
     <script>
         function searchShelters() {
+            var yourLocation = navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('You Are Here');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+            
+          });
             map = new google.maps.Map(document.getElementById('map'), {
-            center: pyrmont,
+            center: yourLocation,
             zoom: 15
             });
 
             var request = {
-                location: pyrmont,
+                location: yourLocation,
                 radius: '500',
                 type: ['restaurant']
             };
