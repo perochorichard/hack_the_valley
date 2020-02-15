@@ -36,9 +36,7 @@
         .myButton{
             border-radius: 0%!important;
         }
-        .myDiv{
-            background-color: #fde1a4;
-        }
+
         .myMap{
             padding: 0!important;
             margin: 0!important;
@@ -49,15 +47,14 @@
 
 <body>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-2 myDiv">
-                
-                <div class="overflow-auto" id="myTable">
-                    <button class="btn btn-primary" id="search">Search</button>
+        <div class="row">    
+            <div class="col-3 text-center">
+                <div class="overflow-auto text-center myDiv mt-2 pt-2" id="myTable">
+                    <button class="btn btn-outline-secondary btn-lg btn-block myButton" id="search">Search</button>
                 </div>
                 
             </div>
-            <div class="col-10 myMap">
+            <div class="col-9 myMap">
                 <div class="map-responsive" id="map"></div>
             </div>
         </div>
@@ -432,24 +429,30 @@
 
                 marker.addListener('click', function () {
                     infoWindow.setContent("<img class='mr-2 mb-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>"
-                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />" + "<button class='btn btn-outline-dark btn-block'>Get Directions</button>");
+                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />" + "<button class='btn btn-outline-dark btn-block' id='getDirection'>Get Directions</button>");
                         var src = new google.maps.LatLng(currentLocation);
-                    service = new google.maps.DistanceMatrixService();
-                    var dest = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-                        calculateRoute(src, dest);
-                        infoWindow.open(map, marker);
-                        service.getDistanceMatrix(
-                        {
-                            origins: [src],
-                            destinations: [dest],
-                            travelMode: 'WALKING',
-                            avoidHighways: true,
-                            avoidTolls: false,
-                        }, callback);
-                        function callback(response, status) {
-                            console.log(response.rows[0].elements[0].distance.text);
-                            console.log(response.rows[0].elements[0].duration.text);
-                        }
+                    var getDirectionButton = document.getElementById("getDirection");
+                    infoWindow.open(map, marker);
+                    getDirectionButton.addEventListener("click", function(){
+                        service = new google.maps.DistanceMatrixService();
+                        var dest = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+                            calculateRoute(src, dest);
+
+                            service.getDistanceMatrix(
+                            {
+                                origins: [src],
+                                destinations: [dest],
+                                travelMode: 'WALKING',
+                                avoidHighways: true,
+                                avoidTolls: false,
+                            }, callback);
+                            function callback(response, status) {
+                                console.log(response.rows[0].elements[0].distance.text);
+                                console.log(response.rows[0].elements[0].duration.text);
+                                directionsDisplay.setMap(map);
+                                directionsDisplay.setOptions( { suppressMarkers: true } );
+                            }
+                    });
                 });
             }
         }
