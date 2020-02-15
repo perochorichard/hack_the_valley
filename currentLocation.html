@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Geolocation</title>
+    <title>Where to Sleep</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <!--jquery-->
@@ -50,7 +50,13 @@
     </div>
     <script>
         var map, infoWindow, services;
+        var currentLocation;
+        var directionsService;
+        var directionsDisplay;
+        var service;
         function initMap() {
+            directionsService = new google.maps.DirectionsService();
+            directionsDisplay = new google.maps.DirectionsRenderer();
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: -34.397, lng: 150.644 },
                 zoom: 15,
@@ -314,18 +320,17 @@
                     }
                 ]
             });
-            infoWindow = new google.maps.InfoWindow({
-                content: 'you are here'
-            });
+            directionsDisplay.setMap(map);
 
-            // Try HTML5 geolocation.
+            infoWindow = new google.maps.InfoWindow({
+                content: 'You Are Here'
+            });
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-
                     currentLocation = pos;
 
                     var marker = new google.maps.Marker({
@@ -334,7 +339,6 @@
                     });
                     map.setCenter(pos);
                     infoWindow.open(map, marker);
-
                     marker.addListener('click', function () {
                         infoWindow.setContent('you are here');
                         infoWindow.open(map, marker);
@@ -343,14 +347,25 @@
                     button.addEventListener('click', searchShelters);
                 }, function () {
                     handleLocationError(true, infoWindow, map.getCenter());
-
                 });
             } else {
-                // Browser doesn't support Geolocation
                 handleLocationError(false, infoWindow, map.getCenter());
             }
         }
 
+        function calculateRoute(src, dest){
+        var request = {
+          origin: src,
+          destination: dest,
+          travelMode: 'WALKING'
+        }
+
+        directionsService.route(request, function(result, status){
+          if(status == 'OK'){
+            directionsDisplay.setDirections(result)
+          }
+        })
+      }
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);
             infoWindow.setContent(browserHasGeolocation ?
@@ -369,7 +384,8 @@
                 name: ['homeless shelter'],
                 vicinity: ['default'],
                 icon: ['default'],
-                fields: ['geometry']
+                fields: ['geometry'],
+                beds: [1]
             };
             service = new google.maps.places.PlacesService(map);
             service.nearbySearch(request, callback);
@@ -380,6 +396,7 @@
                     for (var i = 0; i < results.length; i++) {
                         let name = results[i].name;
                         let pos = results[i].geometry.location;
+                        results[i].beds = (500 - (Math.floor(Math.random() * (500 - 490)) + 490));
                         let listElement = $('<button/>').html(name).on('click', function () {
                             // TODO: center camera to selected shelter location
                             console.log(name);
@@ -399,11 +416,25 @@
 
                 marker.addListener('click', function () {
                     infoWindow.setContent("<img class='mr-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>"
-                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>");
-                    //infoWindow.setContent("Full?")
-                    infoWindow.open(map, marker);
+                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />");
+                        var src = new google.maps.LatLng(currentLocation);
+                    service = new google.maps.DistanceMatrixService();
+                    var dest = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+                        calculateRoute(src, dest);
+                        infoWindow.open(map, marker);
+                        service.getDistanceMatrix(
+                        {
+                            origins: [src],
+                            destinations: [dest],
+                            travelMode: 'WALKING',
+                            avoidHighways: true,
+                            avoidTolls: false,
+                        }, callback);
+                        function callback(response, status) {
+                            console.log(response.rows[0].elements[0].distance.text);
+                            console.log(response.rows[0].elements[0].duration.text);
+                        }
                 });
-
             }
         }
 
