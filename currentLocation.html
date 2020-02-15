@@ -8,7 +8,7 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 90%;
+        height: 50%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -76,11 +76,19 @@
             var request = {
                 location: currentLocation,
                 radius: '500',
-                type: ['restaurant']
+                type: ['restaurant'],
+                fields: ['geometry']
             };
             service = new google.maps.places.PlacesService(map);
-            service.nearbySearch(request, createMarker);
+            service.nearbySearch(request, callback);
 
+        }
+        function callback(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+            }
+        }
         }
         function createMarker(place) {
         var marker = new google.maps.Marker({
@@ -100,7 +108,5 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjy0vHyQQC3ijbPtq4fHdX7WxpzBBxDmY&callback=initMap&libraries=places">
     </script>
-        <button onclick="searchShelters()">Click me</button>
-
   </body>
 </html>
