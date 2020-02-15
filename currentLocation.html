@@ -431,8 +431,8 @@
                 });
 
                 marker.addListener('click', function () {
-                    infoWindow.setContent("<img class='mr-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>"
-                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />");
+                    infoWindow.setContent("<img class='mr-2 mb-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>"
+                        + "<p>" + place.name + "<br />" + place.vicinity + "</p>" + place.beds + " Beds Available" + "<br />" + "<button class='btn btn-outline-dark btn-block'>Get Directions</button>");
                         var src = new google.maps.LatLng(currentLocation);
                     service = new google.maps.DistanceMatrixService();
                     var dest = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
