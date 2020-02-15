@@ -1,118 +1,387 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Geolocation</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-       .map-responsive{
-        overflow:hidden;
-        padding-bottom:50%;
-        position:relative;
-        height:0;
+
+<head>
+  <title>Geolocation</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <!--jquery-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!--bootstrap-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!--popper-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/popper.min.js"></script>
+  <!--font-awesome-->
+  <script src="https://kit.fontawesome.com/95c8f7aee3.js"></script>
+  <style>
+    .map-responsive {
+      overflow: hidden;
+      padding-bottom: 50%;
+      position: relative;
+      height: 0;
     }
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container-fluid">
-        <div class="map-responsive" id="map"></div>
-      <div class="caption text-center mt-1 pt-1">
-        <button class="btn btn-primary" id="search">Search</button>
-      </div>
-      </div>
-    <script>
-      var map, infoWindow, services;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 15
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="map-responsive" id="map"></div>
+    <div class="caption text-center mt-1 pt-1">
+      <button class="btn btn-primary" id="search">Search</button>
+    </div>
+  </div>
+  <script>
+    var map, infoWindow, services;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 15,
+        styles: [
+          {
+            "stylers": [
+              {
+                "color": "#c8c8c8"
+              }
+            ]
+          },
+          {
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#ebe3cd"
+              }
+            ]
+          },
+          {
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#ece8e6"
+              }
+            ]
+          },
+          {
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#644a4a"
+              }
+            ]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "color": "#e1e1e1"
+              },
+              {
+                "weight": 1
+              }
+            ]
+          },
+          {
+            "featureType": "administrative",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                "color": "#c9b2a6"
+              }
+            ]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                "color": "#dcd2be"
+              }
+            ]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#ae9e90"
+              }
+            ]
+          },
+          {
+            "featureType": "landscape.natural",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#dfd2ae"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#dfd2ae"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#93817c"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#a5b076"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#447530"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#f5f1e6"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#d8d8d8"
+              }
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#fdfcf8"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#f8c967"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                "color": "#e9bc62"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#c8af82"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#e7b032"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                "color": "#eba92e"
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#806b63"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#dfd2ae"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#8f7d77"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "color": "#ebe3cd"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#dfd2ae"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#a8bbdb"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#92998d"
+              }
+            ]
+          }
+        ]
+      });
+      infoWindow = new google.maps.InfoWindow;
+
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          currentLocation = pos;
+
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('You Are Here');
+          infoWindow.open(map);
+          map.setCenter(pos);
+          var button = document.getElementById('search')
+          button.addEventListener('click', searchShelters);
+        }, function () {
+          handleLocationError(true, infoWindow, map.getCenter());
+
         });
-        infoWindow = new google.maps.InfoWindow;
-
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-            currentLocation = pos;
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('You Are Here');
-            infoWindow.open(map);
-            map.setCenter(pos);
-            var button = document.getElementById('search')
-            button.addEventListener('click', searchShelters);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-            
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
       }
+    }
 
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-      }
-      var searchShelters =function() {
-            /*map = new google.maps.Map(document.getElementById('map'), {
-            center: currentLocation,
-            zoom: 15
-            });*/
-            var request = {
-                location: currentLocation,
-                radius: '25000',
-                name: ['homeless shelter'],
-                vicinity: ['default'],
-                icon: ['default'],
-                fields: ['geometry']
-            };
-            service = new google.maps.places.PlacesService(map);
-            service.nearbySearch(request, callback);
-            function callback(results, status) {
-            console.log(results)
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+      infoWindow.open(map);
+    }
+    var searchShelters = function () {
+      /*map = new google.maps.Map(document.getElementById('map'), {
+      center: currentLocation,
+      zoom: 15
+      });*/
+      var request = {
+        location: currentLocation,
+        radius: '25000',
+        name: ['homeless shelter'],
+        vicinity: ['default'],
+        icon: ['default'],
+        fields: ['geometry']
+      };
+      service = new google.maps.places.PlacesService(map);
+      service.nearbySearch(request, callback);
+      function callback(results, status) {
+        console.log(results)
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
+          for (var i = 0; i < results.length; i++) {
             createMarker(results[i]);
-            }
+          }
         }
-        }
-        function createMarker(place) {
+      }
+      function createMarker(place) {
         var marker = new google.maps.Marker({
           map: map,
           position: place.geometry.location,
           //icon: "https://media.discordapp.net/attachments/535916156717105172/678145016954093570/unknown.png+"
         });
 
-        marker.addListener('click', function() {
-            var shelterImage = new Image(100, 200);
-            shelterImage.src = place.icon;
-            infoWindow.setContent("<div id='picture' style='float:left'><img src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'></div>" + "<p>" + place.name + "<br />" + place.vicinity + "</p>");
-            //infoWindow.setContent("Full?")
-            infoWindow.open(map, marker);
+        marker.addListener('click', function () {
+          infoWindow.setContent("<img class='mr-2' style='float:left;width: 30%;' src='https://upload.wikimedia.org/wikipedia/commons/7/71/Pictograms-nps-lodging.png'>" + "<p>" + place.name + "<br />" + place.vicinity + "</p>");
+          //infoWindow.setContent("Full?")
+          infoWindow.open(map, marker);
         });
 
       }
-        }
+    }
 
-    </script>
-
-    <script async defer
+  </script>
+  <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjy0vHyQQC3ijbPtq4fHdX7WxpzBBxDmY&callback=initMap&libraries=places">
     </script>
-  </body>
+</body>
+
 </html>
