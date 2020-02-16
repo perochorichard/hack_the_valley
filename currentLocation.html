@@ -393,12 +393,9 @@
                 'Error: Your browser doesn\'t support geolocation.');
             infoWindow.open(map);
         }
+        
         var searchShelters = function () {
             this.style.display = "none";
-            /*map = new google.maps.Map(document.getElementById('map'), {
-            center: currentLocation,
-            zoom: 15
-            });*/
             var request = {
                 location: currentLocation,
                 radius: '25000',
@@ -407,9 +404,8 @@
                 icon: ['default'],
                 fields: ['geometry'],
                 beds: [1],
-                distance: ['1'],
-                duration: ['1']
             };
+
             service = new google.maps.places.PlacesService(map);
             service.nearbySearch(request, callback);
             function callback(results, status) {
@@ -421,8 +417,6 @@
                         let pos = results[i].geometry.location;
                         results[i].beds = (500 - (Math.floor(Math.random() * (500 - 490)) + 490));
                         let listElement = $('<button/>').html(name).on('click', function () {
-                            // TODO: center camera to selected shelter location
-                            console.log(name);
                             map.setCenter(pos);
                         });
                         listElement.addClass("btn btn-outline-secondary btn-block myButton");
@@ -431,6 +425,7 @@
                     }
                 }
             }
+
             function createMarker(place) {
                 var marker = new google.maps.Marker({
                     map: map,
@@ -446,6 +441,7 @@
                         "<button class='btn btn-outline-dark walking btn-block'><i class='fas fa-walking'></i> Get Directions <i class='fas fa-walking'></i></button>" 
                     
                         );
+
                     var src = new google.maps.LatLng(currentLocation);
 
                     $('.walking').on('click', function () {
@@ -464,8 +460,6 @@
                             function callback(response, status) {
                                 infoWindow.setContent(infoWindow.getContent()+"<br />" + "Distance: " + response.rows[0].elements[0].distance.text
                                 + "<p>" + "Approximate Time: " + response.rows[0].elements[0].duration.text);
-                                console.log(response.rows[0].elements[0].distance.text);
-                                console.log(response.rows[0].elements[0].duration.text);
                                 directionsDisplay.setMap(map);
                                 directionsDisplay.setOptions( { suppressMarkers: true } );
                             }
