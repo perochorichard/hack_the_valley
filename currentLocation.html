@@ -35,14 +35,21 @@
             overflow: auto;
         }
 
+        .col-3{
+            background-color: #ffa13f;
+            height:100%;
+            width:100%;
+            z-index: 1;
+        }
+
         .myButton {
             border-radius: 0% !important;
+            background-color: #ffffff;
+            color: #000000;
         }
 
         .myMap {
             padding: 0 !important;
-            margin: 0 !important;
-            width: 100% !important;
         }
     </style>
 </head>
@@ -54,7 +61,6 @@
                 <div class="overflow-auto text-center myDiv mt-2 pt-2" id="myTable">
                     <button class="btn btn-outline-secondary btn-lg btn-block myButton" id="search">Search</button>
                 </div>
-
             </div>
             <div class="col-9 myMap">
                 <div class="map-responsive" id="map"></div>
@@ -348,7 +354,8 @@
 
                     var marker = new google.maps.Marker({
                         map: map,
-                        position: pos
+                        position: pos,
+                        icon: 'currentPointer.png'
                     });
                     map.setCenter(pos);
                     infoWindow.open(map, marker);
@@ -428,7 +435,7 @@
                 var marker = new google.maps.Marker({
                     map: map,
                     position: place.geometry.location,
-                    icon: 'mapMarker.png'
+                    icon: 'vacantMarker.png'
                 });
 
                 marker.addListener('click', function () {
